@@ -1,6 +1,7 @@
 package httptemplate
 
 import (
+	"strconv"
 	"strings"
 	"text/template"
 	"time"
@@ -11,6 +12,7 @@ var TemplatefuncMap = template.FuncMap{
 	"currentTime":   CurrentTime,
 	"permanentTime": PermanentTime,
 	"Contains":      strings.Contains,
+	"fen2yuan":      Fen2yuan,
 }
 
 func ZeroTime() string {
@@ -23,4 +25,22 @@ func CurrentTime() string {
 
 func PermanentTime() string {
 	return "3000-12-31 23:59:59"
+}
+
+func Fen2yuan(fen interface{}) string {
+	var yuan float64
+	intFen, ok := fen.(int)
+	if ok {
+		yuan = float64(intFen) / 100
+		return strconv.FormatFloat(yuan, 'f', 2, 64)
+	}
+	strFen, ok := fen.(string)
+	if ok {
+		intFen, err := strconv.Atoi(strFen)
+		if err == nil {
+			yuan = float64(intFen) / 100
+			return strconv.FormatFloat(yuan, 'f', 2, 64)
+		}
+	}
+	return strFen
 }
