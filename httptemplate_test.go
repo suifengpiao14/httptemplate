@@ -15,7 +15,7 @@ func TestNew(t *testing.T) {
 	HSB-OPENAPI-CALLERSERVICEID: 214001
 	HSB-OPENAPI-SIGNATURE: 767a9cd8148fc5bc460c16372fbac532
 
-	
+
 
 	{"_head":{"_interface":"NewMerchantCenterServer.Api.V1.getMerchantInfo","_msgType":"request","_remark":"","_version":"0.01","_timestamps":"1439261904","_invokeId":"563447634257324435","_callerServiceId":"210015","_groupNo":"1"},"_param":{"merchantId":"{{.merchantId}}","queryType":"{{.queryType}}"}}
 	`
@@ -29,7 +29,7 @@ func TestNew(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	req, err := httpTpl.Request(data)
+	req, err := httpTpl.ReadOnlyRequest(data)
 	if err != nil {
 		panic(err)
 	}

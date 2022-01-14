@@ -11,7 +11,7 @@ import (
 )
 
 type HttpTpl interface {
-	Request(data interface{}) (req *http.Request, err error)
+	ReadOnlyRequest(data interface{}) (req *http.Request, err error)
 }
 
 const (
@@ -70,7 +70,7 @@ func NewHttpTpl(tpl string, funcMap template.FuncMap) (HttpTpl, error) {
 }
 
 //Request 解析模板，生成请求对象
-func (htPt *httpTpl) Request(data interface{}) (req *http.Request, err error) {
+func (htPt *httpTpl) ReadOnlyRequest(data interface{}) (req *http.Request, err error) {
 	var b bytes.Buffer
 	err = htPt.template.Execute(&b, data)
 	if err != nil {
