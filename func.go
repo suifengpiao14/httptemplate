@@ -5,14 +5,18 @@ import (
 	"strings"
 	"text/template"
 	"time"
+
+	"github.com/rs/xid"
 )
 
 var TemplatefuncMap = template.FuncMap{
-	"zeroTime":      ZeroTime,
-	"currentTime":   CurrentTime,
-	"permanentTime": PermanentTime,
-	"Contains":      strings.Contains,
-	"fen2yuan":      Fen2yuan,
+	"zeroTime":        ZeroTime,
+	"currentTime":     CurrentTime,
+	"permanentTime":   PermanentTime,
+	"Contains":        strings.Contains,
+	"fen2yuan":        Fen2yuan,
+	"timestampSecond": TimestampSecond,
+	"xid":             Xid,
 }
 
 func ZeroTime() string {
@@ -43,4 +47,14 @@ func Fen2yuan(fen interface{}) string {
 		}
 	}
 	return strFen
+}
+
+// 秒计数的时间戳
+func TimestampSecond() int64 {
+	return time.Now().Unix()
+}
+
+func Xid() string {
+	guid := xid.New()
+	return guid.String()
 }
