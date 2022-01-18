@@ -18,6 +18,8 @@ var TemplatefuncMap = template.FuncMap{
 	"timestampSecond": TimestampSecond,
 	"xid":             Xid,
 	"withDefault":     WithDefault,
+	"withEmptyStr":    WithEmptyStr,
+	"withZeroNumber":  WithZeroNumber,
 }
 
 func ZeroTime() string {
@@ -66,4 +68,14 @@ func WithDefault(val interface{}, def interface{}) interface{} {
 		val = def
 	}
 	return val
+}
+
+func WithEmptyStr(val interface{}) interface{} {
+	def := ""
+	return WithDefault(val, def)
+}
+
+func WithZeroNumber(val interface{}) interface{} {
+	def := ""
+	return WithDefault(val, def)
 }
