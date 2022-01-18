@@ -17,6 +17,7 @@ var TemplatefuncMap = template.FuncMap{
 	"fen2yuan":        Fen2yuan,
 	"timestampSecond": TimestampSecond,
 	"xid":             Xid,
+	"withDefault":     WithDefault,
 }
 
 func ZeroTime() string {
@@ -57,4 +58,12 @@ func TimestampSecond() int64 {
 func Xid() string {
 	guid := xid.New()
 	return guid.String()
+}
+
+// 模板中预先写入的变量，在接口中可能没有传该字段，此时会出现<no value> ，需要使用默认值
+func WithDefault(val interface{}, def interface{}) interface{} {
+	if val == nil {
+		val = def
+	}
+	return val
 }
