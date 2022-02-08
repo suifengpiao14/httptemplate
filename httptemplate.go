@@ -26,7 +26,6 @@ type httpTpl struct {
 
 //NewHttpTpl 实例化模版请求
 func NewHttpTpl(tpl string, funcMap template.FuncMap) (HttpTpl, error) {
-
 	tpl = strings.TrimSpace(tpl)
 	lineArr := strings.Split(tpl, "\n")
 	formatLineArr := make([]string, 0)
@@ -86,7 +85,17 @@ func (htPt *httpTpl) ReadOnlyRequest(data interface{}) (req *http.Request, err e
 
 //ReadRequest 解析模板
 func (htPt *httpTpl) ReadRequest(httpRaw string) (req *http.Request, err error) {
+	if httpRaw == "" {
+		err = fmt.Errorf("http raw not allow empty")
+		return nil, err
+	}
+
 	bodyIndex := strings.LastIndex(httpRaw, EOF)
+	if bodyIndex == -1 {
+		err = fmt.Errorf("http raw Format error")
+		return nil, err
+	}
+
 	headerRaw := strings.TrimSpace(httpRaw[:bodyIndex])
 	bodyRaw := httpRaw[bodyIndex+len(EOF):]
 	bodyLen := len(bodyRaw)
