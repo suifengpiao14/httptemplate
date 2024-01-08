@@ -12,6 +12,5 @@
 3. 内置基于 github.com/go-resty/resty/v2 的请求函数RestyRequestFn
 4. 内置http 请求日志广播
 5. 内置支持http代理的http.Transport 生成函数
-
-**todo**
-1. 实现response解析生成
+6. 内置常用模板函数
+7. 实现response解析生成

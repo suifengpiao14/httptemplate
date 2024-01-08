@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httputil"
+	"strconv"
 	"strings"
 	"text/template"
 
@@ -158,4 +159,35 @@ func Request2RequestDTO(req *http.Request) (requestDTO *RequestDTO, err error) {
 	}
 
 	return requestDTO, nil
+}
+
+type ResponseDTO struct {
+	HttpStatus  string         `json:"httpStatus"`
+	Header      http.Header    `json:"header"`
+	Cookies     []*http.Cookie `json:"cookies"`
+	Body        string         `json:"body"`
+	RequestData *RequestDTO    `json:"requestData"`
+}
+
+func ParseResponse(b []byte, r *http.Request) (responseDTO *ResponseDTO, err error) {
+	byteReader := bytes.NewReader(b)
+	reader := bufio.NewReader(byteReader)
+	rsp, err := http.ReadResponse(reader, r)
+	if err != nil {
+		return nil, err
+	}
+	reqData := new(RequestDTO)
+	if r != nil {
+		reqData, err = Request2RequestDTO(r)
+		if err != nil {
+			return nil, err
+		}
+	}
+	responseDTO = &ResponseDTO{
+		HttpStatus:  strconv.Itoa(rsp.StatusCode),
+		Header:      rsp.Header,
+		Cookies:     rsp.Cookies(),
+		RequestData: reqData,
+	}
+	return responseDTO, nil
 }
