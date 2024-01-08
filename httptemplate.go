@@ -11,6 +11,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/Masterminds/sprig/v3"
 	"github.com/pkg/errors"
 	"github.com/suifengpiao14/funcs"
 )
@@ -32,18 +33,11 @@ type httpTpl struct {
 }
 
 //NewHttpTpl 实例化模版请求
-func NewHttpTpl(tpl string, funcMap template.FuncMap) (HttpTpl, error) {
+func NewHttpTpl(tpl string) (HttpTpl, error) {
 	// 检测模板是否符合 http 协议
 	req, err := ReadRequest(tpl)
 	if err != nil {
 		return nil, err
-	}
-	if req.URL.Scheme == "" {
-		queryPre := ""
-		if req.URL.RawQuery != "" {
-			queryPre = "?"
-		}
-		req.RequestURI = fmt.Sprintf("http://%s%s%s%s", req.Host, req.URL.Path, queryPre, req.URL.RawQuery)
 	}
 	req.Header.Del("Content-Length") // 实际请求需要重新计算长度
 	// 生成统一符合http 协议规范的模板
@@ -55,7 +49,7 @@ func NewHttpTpl(tpl string, funcMap template.FuncMap) (HttpTpl, error) {
 		Tpl: string(reqByte),
 	}
 
-	t, err := template.New("").Funcs(funcMap).Parse(htPt.Tpl)
+	t, err := template.New("").Funcs(sprig.FuncMap()).Funcs(TemplatefuncMap).Parse(htPt.Tpl)
 	if err != nil {
 		return nil, err
 	}
@@ -76,12 +70,10 @@ func (htPt *httpTpl) Parse(data interface{}) (rawHttp string, err error) {
 
 //Request 解析模板，生成http raw 协议文本
 func (htPt *httpTpl) Request(data interface{}) (r *http.Request, err error) {
-	var b bytes.Buffer
-	err = htPt.template.Execute(&b, data)
+	rawHttp, err := htPt.Parse(data)
 	if err != nil {
-		return
+		return nil, err
 	}
-	rawHttp := b.String()
 	r, err = ReadRequest(rawHttp)
 	if err != nil {
 		return nil, err

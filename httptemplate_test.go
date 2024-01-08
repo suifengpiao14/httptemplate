@@ -24,7 +24,7 @@ func TestNew(t *testing.T) {
 		"queryType":  "businessInfo",
 	}
 
-	httpTpl, err := NewHttpTpl(tpl, TemplatefuncMap)
+	httpTpl, err := NewHttpTpl(tpl)
 	if err != nil {
 		panic(err)
 	}

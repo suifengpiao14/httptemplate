@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/rs/xid"
+	"github.com/suifengpiao14/funcs"
 )
 
 var TemplatefuncMap = template.FuncMap{
@@ -20,6 +21,7 @@ var TemplatefuncMap = template.FuncMap{
 	"withDefault":     WithDefault,
 	"withEmptyStr":    WithEmptyStr,
 	"withZeroNumber":  WithZeroNumber,
+	"md5":             funcs.Md5Lower,
 }
 
 func ZeroTime() string {
