@@ -1,10 +1,9 @@
 package httptemplate
 
 import (
+	"context"
 	"fmt"
 	"testing"
-
-	"github.com/go-resty/resty/v2"
 )
 
 func TestNew(t *testing.T) {
@@ -29,28 +28,16 @@ func TestNew(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	req, err := httpTpl.ReadOnlyRequest(data)
+	req, err := httpTpl.Request(data)
 	if err != nil {
 		panic(err)
-	}
-	fmt.Printf("%#v", req)
-	//req1.Method, req1.URL.String(), req1.Body
-	request := resty.New().R()
-	request.URL = req.URL.String()
-	request.Method = req.Method
-	request.Header = req.Header
-	request.SetCookies(req.Cookies())
-	request.SetBody(req.Body)
-	resp, err := request.Send()
-	if err != nil {
-		panic(err)
-	}
-	if resp.IsError() {
-		fmt.Print(resp.Error())
 	}
 
-	if resp.IsSuccess() {
-		body := resp.Body()
-		fmt.Println(string(body))
+	fmt.Printf("%#v", req)
+	//req1.Method, req1.URL.String(), req1.Body
+	body, err := RestyRequestFn(context.Background(), req, nil)
+	if err != nil {
+		panic(err)
 	}
+	fmt.Println(string(body))
 }
